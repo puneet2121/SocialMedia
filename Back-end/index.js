@@ -36,6 +36,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+/// Routes with files 
+
+app.post('/auth/register', upload.single('picture', register));
+
+
 //database mongoDB
 const PORT = process.env.PORT || 6000
 mongoose.connect(process.env.MONGO_URL, {
@@ -44,3 +49,5 @@ mongoose.connect(process.env.MONGO_URL, {
 }).then(() => {
   app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 }).catch((err) => console.log(`${err} did not save the data`));
+
+
