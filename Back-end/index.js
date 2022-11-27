@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import multer from "multer";
+import authRoutes from './routes/auth';
 
 //config
 const __filename = fileURLToPath(import.meta.url);
@@ -40,6 +41,9 @@ const upload = multer({ storage });
 
 app.post('/auth/register', upload.single('picture', register));
 
+//Routes 
+
+app.use('/auth', authRoutes);
 
 //database mongoDB
 const PORT = process.env.PORT || 6000
