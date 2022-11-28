@@ -10,6 +10,9 @@ import { fileURLToPath } from "url";
 import multer from "multer";
 import userRoutes from './routes/users'
 import authRoutes from './routes/auth';
+import postRoutes from './routes/post';
+import { verifyToken } from "./middleware/auth";
+import createPost from './controllers/post'
 
 //config
 const __filename = fileURLToPath(import.meta.url);
@@ -40,12 +43,14 @@ const upload = multer({ storage });
 
 /// Routes with files 
 
-app.post('/auth/register', upload.single('picture', register));
+app.post('/auth/register', upload.single('picture'), register);
+app.post('/posts',verifyToken, upload.single('picture'), createPost);
 
 //Routes 
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.post('/posts', postRoutes);
 
 //database mongoDB
 const PORT = process.env.PORT || 6000
