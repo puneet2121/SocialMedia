@@ -8,11 +8,12 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import multer from "multer";
-import userRoutes from './routes/users'
-import authRoutes from './routes/auth';
-import postRoutes from './routes/post';
-import { verifyToken } from "./middleware/auth";
-import createPost from './controllers/post'
+import userRoutes from "./routes/users.js";
+import authRoutes from "./routes/auth.js";
+import postRoutes from "./routes/post.js";
+import { verifyToken } from "./middleware/auth.js";
+import { createPost } from "./controllers/post.js";
+import { register } from "./controllers/auth.js";
 
 //config
 const __filename = fileURLToPath(import.meta.url);
@@ -22,7 +23,7 @@ const app = express();
 app.use(express.json);
 app.use(helmet());
 app.use(helmet.contentSecurityPolicy({ policy: "cross-origin" }));
-app.use(morgan('common'));
+app.use(morgan("common"));
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -41,24 +42,25 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-/// Routes with files 
+/// Routes with files
 
-app.post('/auth/register', upload.single('picture'), register);
-app.post('/posts',verifyToken, upload.single('picture'), createPost);
+app.post("/auth/register", upload.single("picture"), register);
+app.post("/posts", verifyToken, upload.single("picture"), createPost);
 
-//Routes 
+//Routes
 
-app.use('/auth', authRoutes);
-app.use('/user', userRoutes);
-app.post('/posts', postRoutes);
+app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
+app.post("/posts", postRoutes);
 
 //database mongoDB
-const PORT = process.env.PORT || 6000
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-}).catch((err) => console.log(`${err} did not save the data`));
-
-
+const PORT = process.env.PORT || 6000;
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+  })
+  .catch((err) => console.log(`${err} did not save the data`));
